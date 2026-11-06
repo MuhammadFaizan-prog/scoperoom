@@ -172,8 +172,8 @@ Script: [`demo/script.md`](demo/script.md)
 ### Prerequisites
 
 - [Switch Console](https://docs.switchagents.ai/switch-rooms/getting-started/install-switch-console) and Docker. Mattermost ships with it, so no Slack admin is needed.
-- **Claude Code** and **Codex** installed and signed in. Check in Console under *Settings → Agent providers*. One provider works too; see [Fallbacks](#fallbacks).
-- GitHub connected in Console under *Settings → Connections*.
+- **Claude Code** and **Codex** installed and signed in. Switch Console checks this during setup ([Set up agent providers](https://docs.switchagents.ai/switch-rooms/getting-started/set-up-agent-providers.md)). One provider works too; see [Fallbacks](#fallbacks).
+- GitHub connected in Switch Console (your Connections), so the template can grant Build write and Review read on one repo.
 - Node 20+ and pnpm, if you want to run the demo app yourself.
 
 ### Steps
