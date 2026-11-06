@@ -1,0 +1,12 @@
+{
+  "name": "scoperoom",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate-template.mjs"
+  },
+  "devDependencies": {
+    "yaml": "^2.8.1"
+  },
+  "packageManager": "pnpm@10.18.0"
+}
