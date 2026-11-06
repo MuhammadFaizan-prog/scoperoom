@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "scope/**"]
+  pull_request:
+
+jobs:
+  template:
+    name: Validate Switch template
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm validate
+
+  demo-app:
+    name: Demo app (typecheck, test, build)
+    runs-on: ubuntu-latest
+    defaults:
+      run: { working-directory: demo-app }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm, cache-dependency-path: demo-app/pnpm-lock.yaml }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+
+  scope-file:
+    name: Scope file present on scope branches
+    if: startsWith(github.head_ref, 'scope/') || startsWith(github.ref_name, 'scope/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check scope/SCOPE-<id>.md exists and has ACs
+        run: |
+          BRANCH="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          ID="${BRANCH#scope/}"
+          FILE="scope/SCOPE-${ID}.md"
+          test -f "$FILE" || { echo "::error::$FILE missing. Build must commit the signed scope first."; exit 1; }
+          grep -q "AC-1" "$FILE" || { echo "::error::$FILE has no acceptance criteria."; exit 1; }
+          echo "✓ $FILE present with acceptance criteria"
