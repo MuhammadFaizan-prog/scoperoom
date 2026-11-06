@@ -18,7 +18,7 @@ The official rules require a natural person to submit, not a bot or automated ag
 ## Judging map
 | Criterion | Weight | Our evidence |
 |---|---|---|
-| Use of Switch | 30% | Group template, 2 linked rooms, Scope bridging both, exclusive role, per-agent addressing, scoped GitHub grants, agent-owned room doc, kickoffs |
+| Use of Switch | 30% | Group template, 2 linked rooms, Scope bridging both, exclusive builder/reviewer roles with role handoff, per-agent addressing, scoped GitHub grants, agent-owned room doc, kickoffs |
 | Technical execution | 25% | One-file template, demo-app tests, branch, PR, clean-room run, `!` checks |
 | Creativity and impact | 25% | Scope-creep guard with pricing, client/studio separation, independent cross-provider review, ledger |
 | Presentation | 20% | Split-screen video, diagrams, before/after table, troubleshooting |

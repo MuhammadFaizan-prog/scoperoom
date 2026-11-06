@@ -9,7 +9,7 @@ Approver ─► {team}-studio room ◄─┘──── build (Claude Code, Git
 studio room docs: ROOM-RULES, SCOPE-LEDGER (owned by scope)
 ```
 The client room is client-safe: no raw output, no review findings. The studio room holds the gates, raw output and reviews.
-Switch is load-bearing: the three agents run as separate sessions (different providers, different working directories, different GitHub grants), the approval gate lives in the room as an exclusive role, and the room history is the decision log. Remove Switch and the reviewer can't see the builder's work, approvals have nowhere to live, and the client sees nothing.
+Switch is load-bearing: the three agents run as separate sessions (different providers, different working directories, different GitHub grants), the approval gate is pinned to the deployer in the room instructions, exclusive roles decide who holds the pen, and the room history is the decision log. Remove Switch and the reviewer can't see the builder's work, approvals have nowhere to live, and the client sees nothing.
 
 ## Frontend choice
 None of our own. The UI is the chat app (Mattermost bundled with Switch; Discord optional).

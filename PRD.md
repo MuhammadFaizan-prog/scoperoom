@@ -53,7 +53,7 @@ Submission track: Best Business Workflow (Flip the Switch, WeMakeDevs x DevTools
 | ID | Story | Acceptance criteria |
 |---|---|---|
 | US-1 | As a client, I post a request in the room and get a written scope back. | Scope replies in the thread within one session with SCOPE-<id> containing at least 3 testable acceptance criteria, an out-of-scope list, and an hour estimate. |
-| US-2 | As the agency lead, I approve or reject a scope by name. | Only the holder of the exclusive `approver` role can approve. Build does nothing until it sees "approve SCOPE-<id>" from that person. A rejection gets a one-line reason restated by Scope. |
+| US-2 | As the agency lead, I approve or reject a scope by name. | Only the approver (the person who ran the template) can approve. Build does nothing until it sees "approve SCOPE-<id>" from that person. A rejection gets a one-line reason restated by Scope. |
 | US-3 | As the lead, I see the work done on a branch with real test output. | Build creates `scope/<id>`, commits, runs `pnpm test`, and pastes the raw output, including failures. It does not open a PR. |
 | US-4 | As the lead, I get an independent review. | Review (a different provider from Build) posts a table: each acceptance criterion, pass or fail, file and line evidence. It flags anything in the diff that is not in the scope. |
 | US-5 | As the lead, I approve the PR. | After "approve PR SCOPE-<id>", Build opens the PR with the scope file and review table in the description and posts the link. |

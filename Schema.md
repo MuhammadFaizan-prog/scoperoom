@@ -5,7 +5,7 @@ No database. State lives in three places.
 ## 1. Switch room (managed by Switch)
 - History: all messages and threads (the decision log).
 - Room instructions: conventions every agent reads on joining.
-- Roles: `approver` (exclusive: true), `client`.
+- Approver: `{$creator}` (the deployer). Roles: `builder`, `reviewer` (both exclusive: true; roles are agent hats in Switch).
 - Aliases: `{team}-scope` -> scope, `{team}-build` -> build, `{team}-review` -> review.
 - Documents: `ROOM-RULES.md`.
 

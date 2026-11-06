@@ -14,7 +14,7 @@ ScopeRoom has two linked rooms. The template writes each room's instructions, so
 
 1. Always name the scope id. "The new feature" is not an id.
 2. Paste real command output, including failures. Never summarise a failing run into a sentence that sounds fine.
-3. No code before `approve SCOPE-<id>` from the approver. No pull request before `approve PR SCOPE-<id>` from the approver. Only the holder of the exclusive `approver` role can approve.
+3. No code before `approve SCOPE-<id>` from the approver. No pull request before `approve PR SCOPE-<id>` from the approver. Only the approver (the person who ran the template) can approve.
 4. One scope in build at a time.
 5. When something is rejected, say why in one line, so the next person who sees it does not start again from nothing.
 6. Reply in the thread of the request you are working on.

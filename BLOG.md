@@ -37,7 +37,7 @@ The rule I followed from the Switch team's guide: if two agents could be one, ma
 1. `approve SCOPE-001`: nothing is coded before this.
 2. `approve PR SCOPE-001`: no PR opens before this.
 
-Only the holder of the **exclusive `approver` role** can say either. When the client typed "approve SCOPE-001" in the client room, Scope noted it and did nothing. *[after the run: paste what Scope said]*
+Only the approver, the person who ran the template (`{$creator}` in the YAML), can say either. When the client typed "approve SCOPE-001" in the client room, Scope noted it and did nothing. *[after the run: paste what Scope said]*
 
 `auto_approve: false` is set on every agent, so a risky tool call still raises a request in the room.
 
@@ -57,7 +57,7 @@ Scope also keeps a **SCOPE-LEDGER** room document: every scope, its status, hour
 
 ## Reproduce it
 
-Fork the repo, paste `scoperoom.template.yaml` into Switch Console → Templates, set `team` and `repository`, and click Create. Both rooms, all three agents, the roles and the kickoffs appear in one run.
+Fork the repo, paste `scoperoom.template.yaml` into Switch Console → Templates, set `team` and `repository`, and click Create. Both rooms, all three agents, the exclusive builder and reviewer roles and the kickoffs appear in one run.
 
 ## The remove-Switch test
 

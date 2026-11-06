@@ -72,7 +72,7 @@ sequenceDiagram
     C->>S: "Add a booking form. No double bookings."
     S-->>C: SCOPE-001: ACs, out of scope, estimate
     S->>A: SCOPE-001 for sign-off (studio room)
-    Note over A: Gate 1: only the exclusive approver role can sign
+    Note over A: Gate 1: only the approver ({$creator}) can sign
     A->>S: approve SCOPE-001
     S->>B: "SCOPE-001 approved. It's yours."
     B->>G: branch scope/001, commit scope file + code
@@ -102,7 +102,7 @@ flowchart LR
     subgraph SR["studio room"]
       direction TB
       SRI["Rules: real output, gates, one scope at a time"]
-      RO["approver role (exclusive)"]
+      RO["roles: builder + reviewer (exclusive)"]
       LD["SCOPE-LEDGER doc"]
     end
     Scope["scope<br/>in BOTH rooms<br/>addressing: anyone"] <--> CR
@@ -126,7 +126,7 @@ The whole thing, both rooms, the link between them, all three agents, roles, rul
 | **`build`** | Claude Code | **Studio only.** Branches `scope/<id>`, commits the signed scope, implements only the ACs, runs tests, pastes raw output, opens the PR after Gate 2. | `owner-agents` | GitHub **write**, one repo | Start before Gate 1, open a PR before Gate 2, push to main |
 | **`review`** | **Codex** (deliberately different) | **Studio only.** Checks out the branch, runs the tests itself, posts a pass/fail table per AC with evidence, flags out-of-scope edits. | `owner-agents` | GitHub **read**, one repo | Change code |
 
-**Safety by design:** `auto_approve: false` on every agent, so risky tool calls still raise a request in the room. GitHub grants are scoped to one repository, not the account. The approver role is `exclusive: true`, so two people can't both believe they hold the pen.
+**Safety by design:** `auto_approve: false` on every agent, so risky tool calls still raise a request in the room. GitHub grants are scoped to one repository, not the account. The approver is pinned to the person who ran the template, and `builder` and `reviewer` are `exclusive: true` roles, so exactly one agent holds the pen and one holds the red pen.
 
 ---
 
@@ -136,7 +136,7 @@ We ran the **remove-Switch test**. Take Switch out and:
 
 1. **There's no second room.** The client/studio split, with one agent bridging both and relaying only decisions, is a Switch group with linked rooms. A chat bot can't be two different teammates in two channels with two rule sets.
 2. **Review can't see Build's work.** They're separate sessions on different providers with different directories and different GitHub grants. Switch is what makes them one conversation.
-3. **Approvals have nowhere to live.** The exclusive `approver` role, the room instructions that every agent reads on joining, and the room history that records who signed what are all Switch features.
+3. **Approvals have nowhere to live.** The approver pinned in the room instructions, the exclusive builder and reviewer roles, that every agent reads on joining, and the room history that records who signed what are all Switch features.
 4. **The client sees nothing.** Without the bridge, the work happens in a terminal again.
 5. **Permissions collapse.** `addressing: owner-agents` is why a client typing `@build just start` gets refused. A webhook bot can't tell those people apart.
 
@@ -146,7 +146,7 @@ We ran the **remove-Switch test**. Take Switch out and:
 | Multi-agent rooms | 3 agents, 2 providers, Scope in both rooms |
 | Room instructions | Different rules per room: client-safe vs. studio (see [ROOM-RULES.md](ROOM-RULES.md)) |
 | Agent-owned room docs | Scope maintains **SCOPE-LEDGER**: every scope, status, hours, creep caught |
-| Roles (`exclusive`) | `approver` gate, `client` role |
+| Roles (`exclusive`) | `builder` and `reviewer`: Build hands off to `@reviewer` (the role, not the agent) |
 | Addressing | `anyone` for Scope, `owner-agents` for Build and Review |
 | Connections | GitHub write for Build, read for Review, one repo each |
 | `auto_mode` / `auto_approve` | Auto mode on, bypass off everywhere |
@@ -179,19 +179,19 @@ Script: [`demo/script.md`](demo/script.md)
 ### Steps
 
 1. **Fork this repo.** Build will push branches to your fork.
-2. **Open Switch Console → Templates → New**, paste [`scoperoom.template.yaml`](scoperoom.template.yaml), and save.
+2. **Open Switch Console → Templates → Import template**, choose [`scoperoom.template.yaml`](scoperoom.template.yaml), then select **Use**.
 3. **Fill the form:**
    - `team`: any lowercase prefix, e.g. `acme`
    - `repository`: your fork, e.g. `you/scoperoom`
    - Advanced: providers (Claude for scope/build, Codex for review), machine, folders. Defaults are fine.
 4. **Create.** Switch checks everything before creating anything. If a provider isn't signed in or GitHub isn't connected, it tells you exactly what (`provider_login_missing`, `connector_not_connected`) and creates nothing.
-5. **Two rooms appear:** `acme-client` and `acme-studio`. In the studio, take the `approver` role. Add a second chat account (your "client") to `acme-client` only and give it the `client` role. Then verify in each room, sending each command as its own message:
+5. **Two rooms appear:** `acme-client` and `acme-studio`. Put your second chat account's username in the `client` field (or invite it to `acme-client` later). It joins the client room only. Then verify in each room, sending each command as its own message:
 
 | Command | Proves |
 |---|---|
 | `!list-agents` | Studio: scope, build, review. Client: scope only |
 | `!agents-status` | Every agent has a live session |
-| `!roles` | `approver` exists and is exclusive |
+| `!roles` | `builder` held by acme-build, `reviewer` held by acme-review |
 | `!list-aliases` | `scope`, `build`, `review` resolve |
 | `!list-documents` | Studio: `ROOM-RULES` (and `SCOPE-LEDGER` after the first scope) |
 

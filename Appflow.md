@@ -9,7 +9,7 @@
 2. Kickoff: each agent states in one line what it will and won't do.
 3. Client posts: "Can we add a booking form with name, email and date, and stop double bookings?"
 4. Scope replies in thread with SCOPE-001: summary, 4 acceptance criteria, out of scope (email confirmations, payments), estimate 3h, risks.
-5. Lead (approver role) posts `approve SCOPE-001`. Scope restates the decision in one line.
+5. The approver (whoever ran the template) posts `approve SCOPE-001`. Scope restates the decision in one line.
 6. Build: branches `scope/001`, commits `scope/SCOPE-001.md`, implements, runs `pnpm test`, pastes real output.
 7. Build asks `@review` to check SCOPE-001 on branch `scope/001`.
 8. Review posts the criteria table (pass/fail with file:line) and lists any changes outside the scope.
@@ -53,7 +53,7 @@ One channel, one thread per scope id. Agents always reply in the thread of the r
 
 ## Permission-denied states
 - Client mentions `@build`: Switch replies "You're not permitted to direct messages to me in this room". Documented as intended.
-- Someone without the approver role posts `approve SCOPE-001`: agents ignore it and say only the approver can approve.
+- Anyone other than the approver posts `approve SCOPE-001`: agents ignore it and say only the approver can approve.
 
 ## Edge cases
 - Two requests at once: Scope assigns two ids; Build works one at a time (room rule).

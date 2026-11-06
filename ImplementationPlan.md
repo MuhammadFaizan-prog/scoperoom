@@ -18,7 +18,7 @@ Deadline: Sat 7 Nov 2026, 11:59 PM IST = 11:29 PM PKT. Times below are PKT.
 2. Repo slice (M1): `demo-app` (Next.js + TS + Tailwind + Vitest), 2-3 tests, `pnpm test` green. Verify: `pnpm test` exits 0.
 3. Template slice (M2): start from `examples/agent-templates/triage-pair.template.yaml`, add third agent, roles, aliases, room instructions, connections. Verify: Console validates on save; run creates everything; `!list-agents`, `!roles`, `!list-aliases` correct.
 4. Scope slice: Scope instructions produce SCOPE-001 in the exact format. Verify: 3+ ACs, out-of-scope, estimate.
-5. Gate slice: approver role + rule; non-approver approval is ignored. Verify on camera with a second Mattermost user.
+5. Gate slice: approver pinned to {$creator} + rule; non-approver approval is ignored. Verify on camera with a second Mattermost user.
 6. Build slice: branch, commit scope file, implement, tests, raw output, no PR. Verify: branch exists on GitHub, no PR.
 7. Review slice: Codex review table against ACs. Verify: table cites file:line, flags out-of-scope changes.
 8. PR slice: approve PR -> PR link. Verify: PR exists with scope + review in body.

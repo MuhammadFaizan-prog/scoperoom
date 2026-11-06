@@ -1,6 +1,6 @@
 # Demo script (about 3:30)
 
-**Layout:** split-screen. Left: the client's Mattermost account in `acme-client`. Right: your account in `acme-studio`. Two chat accounts: **you** (deployer, `approver` in the studio) and **client-sara** (only in `acme-client`, `client` role). Paste the messages exactly.
+**Layout:** split-screen. Left: the client's Mattermost account in `acme-client`. Right: your account in `acme-studio`. Two chat accounts: **you** (deployer, so the approver) and **client-sara** (only in `acme-client`, put in the `client` field). Paste the messages exactly.
 
 ## 0. Hook (10s)
 On screen: "Every agency loses money to 'one small change'. Watch three agents and two rooms stop it."
@@ -12,7 +12,7 @@ Show the template in Switch Console, then the group with two linked rooms. In th
 !agents-status
 !roles
 ```
-Point at `auto_approve: false`, the GitHub grants (write: build, read: review, one repo), and `exclusive: true` on approver.
+Point at `auto_approve: false`, the GitHub grants (write: build, read: review, one repo), and `exclusive: true` on the builder and reviewer roles.
 
 ## 2. Kickoffs (10s)
 Client room: Scope introduces itself. Studio: three one-line "will / won't" intros.
