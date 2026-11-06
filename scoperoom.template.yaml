@@ -50,8 +50,8 @@ params:
     required: false
   bridge:
     type: bridge
-    description: Where the room is mirrored. Mattermost ships with Switch.
-    default: [Mattermost, $first]
+    description: The messaging app the rooms live in. Discord first, then Mattermost (ships with Switch).
+    default: [Discord, Mattermost, $first]
 
 agents:
   - name: "{team}-scope"
@@ -227,6 +227,7 @@ rooms:
   - name: "{team}-studio"
     description: The agency's room. Approvals, builds, raw output and reviews.
     bridge: "{bridge}"
+    channel_type: channel_private
     agents: ["{team}-scope", "{team}-build", "{team}-review"]
     users: ["{$creator}"]
     aliases:

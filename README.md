@@ -167,6 +167,18 @@ Script: [`demo/script.md`](demo/script.md)
 
 ---
 
+### Channel setup: Discord (what we demo on)
+
+Following [Connect Discord](https://docs.switchagents.ai/switch-rooms/deploy/messaging-apps/discord.md):
+
+1. **Discord Developer Portal → New Application → Bot.** Copy the bot token. Turn on **Server Members Intent** and **Message Content Intent**, then save.
+2. **OAuth2 → URL Generator.** Scopes: `bot` and `applications.commands`. Permissions: View Channels, Send Messages, Send Messages in Threads, Manage Webhooks, Manage Channels, Manage Roles, Read Message History, Attach Files, Add Reactions. Open the URL and add the bot to your server.
+3. **Discord → User Settings → Developer → Developer Mode on.** Right-click the server, then **Copy Server ID**.
+4. **Switch Console → your server → Home → Messaging apps → Connect → Discord.** Paste the Bot Token and Guild Id, then select **Connect**. Then **This is me** to link your Discord account. Agents only treat you as their owner after you link it.
+5. Run the template. The studio channel is created **private** (`channel_type: channel_private`), so the client account can't read it.
+
+Mattermost works the same way with no setup, because it ships with Switch. The template picks Discord if it's connected, otherwise Mattermost.
+
 ## Run it in 10 minutes
 
 ### Prerequisites
