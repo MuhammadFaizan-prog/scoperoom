@@ -50,8 +50,8 @@ params:
     required: false
   bridge:
     type: bridge
-    description: The messaging app the rooms live in. Discord first, then Mattermost (ships with Switch).
-    default: [Discord, Mattermost, $first]
+    description: The messaging app the rooms live in. Mattermost ships with Switch, so it needs no setup.
+    default: [Mattermost, $first]
 
 agents:
   - name: "{team}-scope"

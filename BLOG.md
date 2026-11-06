@@ -28,7 +28,7 @@ Scope is the only agent in both rooms, so it's the bridge. Each room has its own
 |---|---|---|
 | scope | Claude Code | Talks to clients, so `addressing: anyone`. No GitHub access at all. |
 | build | Claude Code | Writes code, so `addressing: owner-agents` and GitHub **write** on one repo. |
-| review | Codex | A different model reviewing, so it isn't the builder grading itself. GitHub **read** only. |
+| review | OpenCode | A different model reviewing, so it isn't the builder grading itself. GitHub **read** only. |
 
 The rule I followed from the Switch team's guide: if two agents could be one, make them one. Review can't be Build, because then there's no second opinion. Scope can't be Build, because clients must be able to talk to Scope and must never be able to start a build.
 

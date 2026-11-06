@@ -33,7 +33,7 @@ Scope: noted, but only the agency approver signs. Nothing happens on the right.
 Scope restates it and hands it to Build. Build branches, commits the scope file, implements, runs tests, and pastes **raw** output on the right. Left only gets: "SCOPE-001 is being built."
 
 ## 6. Review (right)
-Review (Codex) posts its AC table and "Out-of-scope changes: none". If it says CHANGES NEEDED, keep it in: a real loop is better on camera.
+Review (second provider) posts its AC table and "Out-of-scope changes: none". If it says CHANGES NEEDED, keep it in: a real loop is better on camera.
 
 ## 7. PR (right)
 > approve PR SCOPE-001

@@ -38,3 +38,5 @@ None yet.
 ## Verification history
 - 2026-11-06 21:50 PKT: demo-app `pnpm test` 4/4 pass, `pnpm typecheck` clean, `pnpm build` ok.
 - Template: YAML parses; all placeholders declared; no unused params. Not yet run in Switch Console.
+
+- D6 (2026-11-06 23:40 PKT): Back to Mattermost (bundled) as the default bridge. The Discord bridge would not start on the user's Windows setup ("Bridge is not running"). `bridge` default is now `[Mattermost, $first]`. `channel_type: channel_private` is checked against Switch docs/TEMPLATES.md (`channel_public | channel_private`). README provider docs now say Claude Code for Scope and Build, OpenCode for Review. The CI scope-file claim is toned down: it checks that the file exists, not who signed it. Live run in Switch Console is still pending.

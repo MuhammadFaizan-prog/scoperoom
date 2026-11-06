@@ -8,7 +8,7 @@
 
 [![Built for Flip the Switch](https://img.shields.io/badge/Flip%20the%20Switch-Business%20Workflow-10b981?style=for-the-badge)](https://www.wemakedevs.org/hackathons/switch)
 [![Powered by Switch](https://img.shields.io/badge/Powered%20by-Switch-111827?style=for-the-badge)](https://github.com/sandbox-quantum/switch)
-[![Agents](https://img.shields.io/badge/Agents-Claude%20Code%20%2B%20Codex-6366f1?style=for-the-badge)](#the-agents)
+[![Agents](https://img.shields.io/badge/Agents-Claude%20Code%20%2B%20OpenCode-6366f1?style=for-the-badge)](#the-agents)
 [![CI](https://github.com/MuhammadFaizan-prog/scoperoom/actions/workflows/ci.yml/badge.svg)](https://github.com/MuhammadFaizan-prog/scoperoom/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-f59e0b?style=for-the-badge)](LICENSE)
 
@@ -65,7 +65,7 @@ sequenceDiagram
     box rgb(255,251,235) studio room
     actor A as Approver<br/>(agency lead)
     participant B as Build agent<br/>(Claude Code)
-    participant R as Review agent<br/>(Codex)
+    participant R as Review agent<br/>(OpenCode)
     end
     participant G as GitHub
 
@@ -124,7 +124,7 @@ The whole thing, both rooms, the link between them, all three agents, roles, rul
 |---|---|---|---|---|---|
 | **`scope`** | Claude Code | **Lives in both rooms.** Writes `SCOPE-<id>` (ACs, out of scope, estimate, risks), relays status to the client in plain words, prices scope creep, and owns the SCOPE-LEDGER doc. | `anyone` (clients need it) | Reads the repo, no GitHub grant | Write code, touch git, leak studio detail to the client |
 | **`build`** | Claude Code | **Studio only.** Branches `scope/<id>`, commits the signed scope, implements only the ACs, runs tests, pastes raw output, opens the PR after Gate 2. | `owner-agents` | GitHub **write**, one repo | Start before Gate 1, open a PR before Gate 2, push to main |
-| **`review`** | **Codex** (deliberately different) | **Studio only.** Checks out the branch, runs the tests itself, posts a pass/fail table per AC with evidence, flags out-of-scope edits. | `owner-agents` | GitHub **read**, one repo | Change code |
+| **`review`** | **OpenCode** (deliberately different; Codex or Antigravity also work) | **Studio only.** Checks out the branch, runs the tests itself, posts a pass/fail table per AC with evidence, flags out-of-scope edits. | `owner-agents` | GitHub **read**, one repo | Change code |
 
 **Safety by design:** `auto_approve: false` on every agent, so risky tool calls still raise a request in the room. GitHub grants are scoped to one repository, not the account. The approver is pinned to the person who ran the template, and `builder` and `reviewer` are `exclusive: true` roles, so exactly one agent holds the pen and one holds the red pen.
 
@@ -160,31 +160,31 @@ We ran the **remove-Switch test**. Take Switch out and:
 ## Demo video
 
 > **[Watch the 3-minute demo](#)** <!-- TODO: paste YouTube/Loom link before submitting -->
+>
+> Status: the template passes `pnpm validate` and the demo app passes CI. The video is the first recorded run in Switch Console.
 
-What you'll see, split-screen with the client room on the left and the studio on the right: a client request becomes SCOPE-001 → the client tries to approve and gets refused → the approver signs → Build ships a branch with real test output → Codex reviews every AC → PR opens → the client asks for "one small thing" and Scope catches it as SCOPE-002 with a price.
+What you'll see, split-screen with the client room on the left and the studio on the right: a client request becomes SCOPE-001 → the client tries to approve and gets refused → the approver signs → Build ships a branch with real test output → Review, on a second provider, checks every AC → PR opens → the client asks for "one small thing" and Scope catches it as SCOPE-002 with a price.
 
 Script: [`demo/script.md`](demo/script.md)
 
 ---
 
-### Channel setup: Discord (what we demo on)
+### Channel setup: Mattermost (what we demo on)
 
-Following [Connect Discord](https://docs.switchagents.ai/switch-rooms/deploy/messaging-apps/discord.md):
+Mattermost ships with Switch Console's local server, so there's nothing to connect. It's the default bridge in the template (`default: [Mattermost, $first]`).
 
-1. **Discord Developer Portal → New Application → Bot.** Copy the bot token. Turn on **Server Members Intent** and **Message Content Intent**, then save.
-2. **OAuth2 → URL Generator.** Scopes: `bot` and `applications.commands`. Permissions: View Channels, Send Messages, Send Messages in Threads, Manage Webhooks, Manage Channels, Manage Roles, Read Message History, Attach Files, Add Reactions. Open the URL and add the bot to your server.
-3. **Discord → User Settings → Developer → Developer Mode on.** Right-click the server, then **Copy Server ID**.
-4. **Switch Console → your server → Home → Messaging apps → Connect → Discord.** Paste the Bot Token and Guild Id, then select **Connect**. Then **This is me** to link your Discord account. Agents only treat you as their owner after you link it.
-5. Run the template. The studio channel is created **private** (`channel_type: channel_private`), so the client account can't read it.
+1. Start Switch Console. Under **Home → Messaging apps**, Mattermost shows as **Default**.
+2. Create a second Mattermost user to play the client, and put its username in the template's `client` field.
+3. Run the template. The studio channel is created **private** (`channel_type: channel_private`), so the client account isn't in it and can't read it.
 
-Mattermost works the same way with no setup, because it ships with Switch. The template picks Discord if it's connected, otherwise Mattermost.
+Slack, Discord and Teams work too: connect them under **Messaging apps** ([docs](https://docs.switchagents.ai/switch-rooms/deploy/messaging-apps/discord.md)) and pick them in the template's `bridge` field.
 
 ## Run it in 10 minutes
 
 ### Prerequisites
 
 - [Switch Console](https://docs.switchagents.ai/switch-rooms/getting-started/install-switch-console) and Docker. Mattermost ships with it, so no Slack admin is needed.
-- **Claude Code** and **Codex** installed and signed in. Switch Console checks this during setup ([Set up agent providers](https://docs.switchagents.ai/switch-rooms/getting-started/set-up-agent-providers.md)). One provider works too; see [Fallbacks](#fallbacks).
+- **Two coding agents** installed and signed in, for example **Claude Code** for Scope and Build, and **OpenCode** for Review (Codex and Antigravity also work). The template's provider chains pick the first one installed: Build `claude → codex → antigravity → opencode`, Review `codex → antigravity → opencode → claude`. Switch Console checks this during setup ([Set up agent providers](https://docs.switchagents.ai/switch-rooms/getting-started/set-up-agent-providers.md)). One provider works too; see [Fallbacks](#fallbacks).
 - GitHub connected in Switch Console (your Connections), so the template can grant Build write and Review read on one repo.
 - Node 20+ and pnpm, if you want to run the demo app yourself.
 
@@ -195,7 +195,7 @@ Mattermost works the same way with no setup, because it ships with Switch. The t
 3. **Fill the form:**
    - `team`: any lowercase prefix, e.g. `acme`
    - `repository`: your fork, e.g. `you/scoperoom`
-   - Advanced: providers (Claude for scope/build, Codex for review), machine, folders. Defaults are fine.
+   - Advanced: providers (Claude for Scope and Build, a different one for Review), machine, folders. Defaults are fine.
 4. **Create.** Switch checks everything before creating anything. If a provider isn't signed in or GitHub isn't connected, it tells you exactly what (`provider_login_missing`, `connector_not_connected`) and creates nothing.
 5. **Two rooms appear:** `acme-client` and `acme-studio`. Put your second chat account's username in the `client` field (or invite it to `acme-client` later). It joins the client room only. Then verify in each room, sending each command as its own message:
 
@@ -218,7 +218,7 @@ Then follow [`demo/script.md`](demo/script.md).
 ```bash
 cd demo-app
 pnpm install
-pnpm test        # 4 baseline tests pass
+pnpm test        # 8 tests pass
 pnpm dev         # http://localhost:3000
 ```
 
@@ -236,7 +236,7 @@ The baseline app lists bookings but has **no form and no double-booking check**.
 |---|---|
 | `pnpm validate` ([scripts/validate-template.mjs](scripts/validate-template.mjs)) | The template follows Switch's TEMPLATES.md rules: every placeholder is declared, every agent has a provider, location and directory, and group rooms have kickoffs. It also checks the ScopeRoom invariants: bypass is off, write grants cover one repo, Scope has no GitHub access, Review uses a separate provider, and Scope is the only agent in the client room. |
 | CI: demo-app | Typecheck, tests and build on every push and PR, so Review and the approver see a green or red check on the agent's PR. |
-| CI: scope-file | A `scope/<id>` branch fails unless `scope/SCOPE-<id>.md` exists with acceptance criteria. **The signed scope is enforced by CI, not just by a prompt.** |
+| CI: scope-file | A `scope/<id>` branch fails unless `scope/SCOPE-<id>.md` exists and lists acceptance criteria (`AC-1` onward). It checks the scope file is there, not who signed it. Sign-off itself is the approver's phrase in the studio room. |
 | PR template | Every agent PR carries the AC → evidence table and the out-of-scope list. |
 
 ---
@@ -282,7 +282,7 @@ scoperoom/
 | `You're not permitted to direct messages to me in this room` | **Working as designed.** Build and Review are `owner-agents`. |
 | `I only take instructions from my owner` | Link your chat account to Switch. |
 | Agent looks silent | Check the **thread** under your message. Switch replies in threads. |
-| Tables show as raw text | You're on Slack, which doesn't render Markdown tables. Use Mattermost or Discord for the demo. |
+| Tables show as raw text | You're on Slack, which doesn't render Markdown tables. Use Mattermost (bundled) for the demo. |
 
 > ⚠️ A message that **starts** with `!` runs as a command, even inside backticks. Never paste `!reset` to show someone the syntax.
 
@@ -307,7 +307,7 @@ Full threat model: [Security.md](Security.md).
 
 ## Built with
 
-[Switch](https://github.com/sandbox-quantum/switch) · Claude Code · Codex · Mattermost · Next.js 15 · React 19 · TypeScript · Tailwind CSS 4 · Vitest · zod
+[Switch](https://github.com/sandbox-quantum/switch) · Claude Code · OpenCode · Mattermost · Next.js 15 · React 19 · TypeScript · Tailwind CSS 4 · Vitest · zod
 
 ## Author
 
