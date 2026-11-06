@@ -9,6 +9,7 @@
 [![Built for Flip the Switch](https://img.shields.io/badge/Flip%20the%20Switch-Business%20Workflow-10b981?style=for-the-badge)](https://www.wemakedevs.org/hackathons/switch)
 [![Powered by Switch](https://img.shields.io/badge/Powered%20by-Switch-111827?style=for-the-badge)](https://github.com/sandbox-quantum/switch)
 [![Agents](https://img.shields.io/badge/Agents-Claude%20Code%20%2B%20Codex-6366f1?style=for-the-badge)](#the-agents)
+[![CI](https://github.com/MuhammadFaizan-prog/scoperoom/actions/workflows/ci.yml/badge.svg)](https://github.com/MuhammadFaizan-prog/scoperoom/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-f59e0b?style=for-the-badge)](LICENSE)
 
 [**Demo video**](#demo-video) · [**Run it in 10 minutes**](#run-it-in-10-minutes) · [**How it works**](#how-it-works) · [**Why Switch is load-bearing**](#why-switch-is-load-bearing)
@@ -209,7 +210,20 @@ pnpm test        # 4 baseline tests pass
 pnpm dev         # http://localhost:3000
 ```
 
+<img src="demo/screenshots/demo-app-baseline.png" alt="Demo app baseline: Northlight Studio upcoming sessions" width="720">
+
 The baseline app lists bookings but has **no form and no double-booking check**. That is the work SCOPE-001 asks for, so the agents have a real change to make on camera.
+
+---
+
+## Guardrails that run on every branch
+
+| Check | What it enforces |
+|---|---|
+| `pnpm validate` ([scripts/validate-template.mjs](scripts/validate-template.mjs)) | The template follows Switch's TEMPLATES.md rules: every placeholder is declared, every agent has a provider, location and directory, and group rooms have kickoffs. It also checks the ScopeRoom invariants: bypass is off, write grants cover one repo, Scope has no GitHub access, Review uses a separate provider, and Scope is the only agent in the client room. |
+| CI: demo-app | Typecheck, tests and build on every push and PR, so Review and the approver see a green or red check on the agent's PR. |
+| CI: scope-file | A `scope/<id>` branch fails unless `scope/SCOPE-<id>.md` exists with acceptance criteria. **The signed scope is enforced by CI, not just by a prompt.** |
+| PR template | Every agent PR carries the AC → evidence table and the out-of-scope list. |
 
 ---
 
@@ -235,7 +249,9 @@ scoperoom/
 ├── SUBMISSION.md             ← submission checklist mapped to every requirement
 ├── BLOG.md                   ← write-up for the Best Blog side track
 ├── demo-app/                 ← Next.js 15 + TS + Tailwind + Vitest app the agents change
-├── scope/                    ← SCOPE-<id>.md files land here, committed by Build
+├── scope/                    ← SCOPE-<id>.md files land here (format: _TEMPLATE.md), committed by Build
+├── scripts/validate-template.mjs ← static checks for the Switch template
+├── .github/                  ← CI + PR template
 └── PRD.md · Techspec.md · Appflow.md · Schema.md · ImplementationPlan.md
     Tracker.md · Rules.md · Security.md · Structure.md   ← full product and engineering docs
 ```
