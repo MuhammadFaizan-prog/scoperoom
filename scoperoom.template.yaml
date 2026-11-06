@@ -30,13 +30,13 @@ params:
     type: provider
     label: Provider for scope and build
     description: Coding agent behind Scope and Build. The first one installed is chosen.
-    default: [claude, codex, opencode]
+    default: [claude, codex, antigravity, opencode]
     input: advanced
   review_provider:
     type: provider
     label: Provider for review
     description: Use a different provider from Build, so the review is a real second opinion.
-    default: [codex, opencode, claude]
+    default: [codex, antigravity, opencode, claude]
     input: advanced
   location:
     type: location
