@@ -1,51 +1,56 @@
-# Demo script (3-4 minutes)
+# Demo script (about 3:30)
 
-Two Mattermost users: **you** (deployer, holds the `approver` role) and **client** (a second account, e.g. `client-sara`, given the `client` role). Paste the messages exactly.
+**Layout:** split-screen. Left: the client's Mattermost account in `acme-client`. Right: your account in `acme-studio`. Two chat accounts: **you** (deployer, `approver` in the studio) and **client-sara** (only in `acme-client`, `client` role). Paste the messages exactly.
 
-## 0. Setup shot (20s)
-Show Switch Console with the template run, then the room. Run:
+## 0. Hook (10s)
+On screen: "Every agency loses money to 'one small change'. Watch three agents and two rooms stop it."
+
+## 1. Setup shot (25s)
+Show the template in Switch Console, then the group with two linked rooms. In the studio, send each as its own message:
 ```
 !list-agents
 !agents-status
 !roles
 ```
-(Each on its own message. `!` at the start of a message runs it.)
+Point at `auto_approve: false`, the GitHub grants (write: build, read: review, one repo), and `exclusive: true` on approver.
 
-## 1. Kickoff (15s)
-The kickoff is posted by the template. Show the three one-line intros.
+## 2. Kickoffs (10s)
+Client room: Scope introduces itself. Studio: three one-line "will / won't" intros.
 
-## 2. Client request (as client)
+## 3. Client request (left, as client-sara)
 > @scope Hi! Can we add a booking form to the studio page? Name, email and a date. And please make sure two people can't book the same day.
 
-Scope replies with SCOPE-001 (ACs, out of scope incl. confirmation emails, estimate).
+Scope replies with SCOPE-001 on the left, and the same scope appears on the right addressed to you.
 
-## 3. Non-approver tries to approve (as client) — shows the gate
+## 4. Client tries to approve (left)
 > approve SCOPE-001
 
-Scope: only the approver can approve.
+Scope: noted, but only the agency approver signs. Nothing happens on the right.
 
-Then (as client):
-> @build can you just start?
-
-Switch refuses: not permitted (addressing owner-agents).
-
-## 4. Approval (as you)
+## 5. Sign-off (right, as you)
 > approve SCOPE-001
 
-Scope restates it and hands to Build. Build branches, commits the scope file, implements, runs tests, pastes raw output, and asks Review.
+Scope restates it and hands it to Build. Build branches, commits the scope file, implements, runs tests, and pastes **raw** output on the right. Left only gets: "SCOPE-001 is being built."
 
-## 5. Review
-Review posts its AC table and "Out-of-scope changes: none".
+## 6. Review (right)
+Review (Codex) posts its AC table and "Out-of-scope changes: none". If it says CHANGES NEEDED, keep it in: a real loop is better on camera.
 
-## 6. PR (as you)
+## 7. PR (right)
 > approve PR SCOPE-001
 
-Build opens the PR and posts the link. Click it: scope file + review table in the description.
+Build opens the PR and posts the link. Scope tells the client on the left. Click the PR: the scope file and review table are in the description.
 
-## 7. Scope creep (as client)
+## 8. Scope creep (left)
 > @scope Love it! Quick one: can it also send a confirmation email when someone books? Should be small.
 
-Scope: OUT OF SCOPE (matches the "Out of scope" line), drafts SCOPE-002 with Parent: SCOPE-001 and an estimate delta, asks the approver.
+Left: "That's outside SCOPE-001. I've drafted SCOPE-002 (+2 h) for the agency to approve." Right: SCOPE-002 with `Parent: SCOPE-001`, waiting for you.
 
-## 8. Close (15s)
-"Remove Switch and the reviewer can't see the builder's branch, approvals have nowhere to live, and the client sees nothing. The room is the contract."
+## 9. Ledger (right)
+> @scope what have we agreed so far?
+
+Scope answers from SCOPE-LEDGER: SCOPE-001 approved 3 h, SCOPE-002 pending 2 h, 1 creep ask caught.
+
+## 10. Close (15s)
+"Take Switch out and there's no studio and no client room, Review can't see Build's branch, the approvals have nowhere to live, and the client sees nothing. The room is the contract."
+
+Record at 1080p, zoom the chat to 125%, and cut the waits. Keep it under 4 minutes.
