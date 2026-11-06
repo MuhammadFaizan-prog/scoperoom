@@ -25,6 +25,8 @@ Current active work: repo scaffolded and pushed (Fri 6 Nov 2026, 21:50 PKT). Nex
 - D2: 3 agents, review on a different provider.
 - D3: Mattermost (bundled) for the demo.
 - D4: Repo name `scoperoom`.
+- D5 (2026-11-06 22:00 PKT): Split into linked client and studio rooms (Switch group), with Scope as the only bridge. Added a SCOPE-LEDGER room doc. Reason: client-safe comms, deeper Switch use, more creative.
+- D6: Added SUBMISSION.md (requirements map) and BLOG.md (Best Blog draft).
 
 ## Assumptions
 - Claude Code and Codex both available on his machine.

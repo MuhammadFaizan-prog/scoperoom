@@ -2,16 +2,13 @@
 
 ## Architecture overview
 ```
-Client / Lead (Mattermost or Discord channel)
-        |  messages, approvals
-   Switch room "{team}-scoperoom"  (history, room instructions, roles, aliases, documents)
-   /             |                \
-scope agent    build agent       review agent
-(Claude Code)  (Claude Code)     (Codex, different provider)
-docs dir       demo-app repo     read-only clone of demo-app
-no GitHub      GitHub write,     GitHub read, one repo
-               one repo
+Client ──► {team}-client room ◄──┐                 (group "{team} ScopeRoom", linked)
+                                 │ scope (both rooms, the only bridge)
+Approver ─► {team}-studio room ◄─┘──── build (Claude Code, GitHub write, 1 repo)
+                                 └──── review (Codex, GitHub read, 1 repo)
+studio room docs: ROOM-RULES, SCOPE-LEDGER (owned by scope)
 ```
+The client room is client-safe: no raw output, no review findings. The studio room holds the gates, raw output and reviews.
 Switch is load-bearing: the three agents run as separate sessions (different providers, different working directories, different GitHub grants), the approval gate lives in the room as an exclusive role, and the room history is the decision log. Remove Switch and the reviewer can't see the builder's work, approvals have nowhere to live, and the client sees nothing.
 
 ## Frontend choice

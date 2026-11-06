@@ -45,6 +45,8 @@ Submission track: Best Business Workflow (Flip the Switch, WeMakeDevs x DevTools
 | F4 | Independent review of the diff against each acceptance criterion, with pass or fail per criterion | Review |
 | F5 | PR approval gate, then Build opens the PR and posts the link | Person, Build |
 | F6 | Scope-creep check on any later request: in scope or out of scope, reason, estimate delta | Scope |
+| F8 | Client room vs studio room; Scope bridges and relays decisions only | Switch group |
+| F9 | SCOPE-LEDGER room doc: scopes, status, hours, creep caught | Scope |
 | F7 | Decision log: every approval or rejection restated in one line with the scope id | All agents (room rule) |
 
 ## User stories

@@ -1,5 +1,9 @@
 # Appflow: ScopeRoom
 
+## Rooms
+- `{team}-client`: the client and scope. Plain-language status only.
+- `{team}-studio`: the approver, scope, build and review. Gates, raw output, reviews, and the SCOPE-LEDGER doc.
+
 ## Primary user journey (the demo)
 1. Lead runs the template in Switch Console: fills `team`, `repository`, providers, bridge. Room appears in Mattermost.
 2. Kickoff: each agent states in one line what it will and won't do.
@@ -11,7 +15,9 @@
 8. Review posts the criteria table (pass/fail with file:line) and lists any changes outside the scope.
 9. If a criterion fails: Lead tells Build to fix; loop 6-8. Shown once on camera if natural.
 10. Lead posts `approve PR SCOPE-001`. Build opens the PR (scope file + review table in body) and posts the link. Artifact: the PR.
-11. Client posts: "Also send a confirmation email, quick one." Scope: "Out of scope for SCOPE-001 (listed under Out of scope). New SCOPE-002, estimate +2h. Approver to decide." Scope-creep caught and logged.
+10b. Scope tells the client in the client room, with the PR link.
+11. Client posts (client room): "Also send a confirmation email, quick one." Scope: "Out of scope for SCOPE-001 (listed under Out of scope). New SCOPE-002, estimate +2h. Approver to decide." Scope-creep caught and logged in SCOPE-LEDGER.
+12. Approver asks `@scope what have we agreed so far?` and gets the ledger summary.
 
 ## Onboarding flow
 README steps: install Switch Console + Docker, sign in Claude Code and Codex, connect GitHub in Console, fork the repo, run the template, paste the kickoff check (`!agents-status`).
