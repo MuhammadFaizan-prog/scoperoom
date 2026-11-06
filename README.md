@@ -210,7 +210,9 @@ pnpm test        # 4 baseline tests pass
 pnpm dev         # http://localhost:3000
 ```
 
-<img src="demo/screenshots/demo-app-baseline.png" alt="Demo app baseline: Northlight Studio upcoming sessions" width="720">
+<img src="demo/screenshots/demo-app-baseline.png" alt="Demo app baseline: Northlight Studio week calendar with the ScopeRoom panel" width="860">
+
+<sub>UI inspired by <a href="https://dribbble.com/search/booking-dashboard">Yow Island – Reservation Dashboard</a> on Dribbble.</sub>
 
 The baseline app lists bookings but has **no form and no double-booking check**. That is the work SCOPE-001 asks for, so the agents have a real change to make on camera.
 
