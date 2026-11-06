@@ -30,7 +30,9 @@ ok(`${Object.keys(params).length} params declared`);
 const used = new Set([...text.matchAll(/\{([a-z_][a-z0-9_]*)\}/g)].map((m) => m[1]));
 for (const u of used) if (!(u in params)) fail(`placeholder {${u}} is not a declared param`);
 for (const p of Object.keys(params)) if (!used.has(p)) fail(`param ${p} is never used`);
-ok("every placeholder is declared and every param is used");
+const BUILTINS = ["$creator", "$creator_email", "$date", "$timestamp", "$agents_dir", "agent"];
+for (const m of text.matchAll(/\{(\$[a-z_]+)\}/g)) if (!BUILTINS.includes(m[1])) fail(`unknown builtin {${m[1]}}`);
+ok("every placeholder is declared, every param is used, builtins are known");
 
 // Agents
 const agents = doc.agents ?? (doc.agent ? [doc.agent] : []);

@@ -6,10 +6,11 @@
 #                    output, review findings and internal debate stay here.
 # Scope sits in both rooms and is the only bridge between them. Nothing is
 # coded before the approver signs the scope, and no PR opens before the
-# approver signs the PR. Later "small" asks are checked against the signed
+# approver signs the PR. The approver is whoever runs the template ({$creator}).
+# Later "small" asks are checked against the signed
 # scope (scope-creep guard) and every decision lands in the SCOPE-LEDGER doc.
 #
-# Run it from Switch Console: Templates > New > paste this file > Create.
+# Run it from Switch Console: Templates > Import template > this file > Use.
 # Field reference: https://github.com/sandbox-quantum/switch/blob/main/docs/TEMPLATES.md
 version: 1
 
@@ -42,18 +43,11 @@ params:
     description: The machine the agents run on.
     default: local
     input: advanced
-  scope_dir:
-    type: directory
-    default: "{$agents_dir}/{team}-scope"
-    input: advanced
-  build_dir:
-    type: directory
-    default: "{$agents_dir}/{team}-build"
-    input: advanced
-  review_dir:
-    type: directory
-    default: "{$agents_dir}/{team}-review"
-    input: advanced
+  client:
+    type: string
+    label: Client's chat username (optional)
+    description: A second chat account that plays the client. It joins the client room only. Leave empty and invite them later.
+    required: false
   bridge:
     type: bridge
     description: Where the room is mirrored. Mattermost ships with Switch.
@@ -66,7 +60,7 @@ agents:
     addressing: anyone
     provider: "{build_provider}"
     location: "{location}"
-    directory: "{scope_dir}"
+    directory: "{$agents_dir}/{team}-scope"
     repo: "https://github.com/{repository}"
     auto_mode: true
     auto_approve: false
@@ -100,8 +94,9 @@ agents:
       Read the code in demo-app/ in your directory before estimating. If the
       request is too vague to scope, ask at most 2 questions first.
 
-      APPROVALS. Only the person holding the exclusive "approver" role can
-      approve. When they write "approve SCOPE-<id>", restate it in one line:
+      APPROVALS. The approver is @{$creator}, the person who set up these
+      rooms, and nobody else can approve. When @{$creator} writes
+      "approve SCOPE-<id>" in the studio room, restate it in one line:
       "SCOPE-<id> approved by @<user>. @build, it's yours." When anyone else
       writes it, say only the approver can approve. On a rejection, restate the
       reason in one line so nobody starts again from nothing.
@@ -131,7 +126,7 @@ agents:
     addressing: owner-agents
     provider: "{build_provider}"
     location: "{location}"
-    directory: "{build_dir}"
+    directory: "{$agents_dir}/{team}-build"
     repo: "https://github.com/{repository}"
     auto_mode: true
     auto_approve: false
@@ -144,8 +139,8 @@ agents:
       never in the client room. You implement scopes in the repository cloned
       in your directory. The app is in demo-app/ (Next.js, TypeScript, Vitest, pnpm).
 
-      GATE 1. Do nothing for SCOPE-<id> until the approver has written
-      "approve SCOPE-<id>" in this room. If someone else asks you to start,
+      GATE 1. Do nothing for SCOPE-<id> until the approver, @{$creator}, has
+      written "approve SCOPE-<id>" in this room. If someone else asks you to start,
       say you are waiting for the approver.
 
       BUILD. Then, in order, saying what you are about to do before slow steps:
@@ -158,9 +153,10 @@ agents:
         5. Push the branch. Post: "BUILD SCOPE-<id>: branch scope/<id>, <sha>,
            <passed>/<total> tests" followed by the RAW test output in a code
            block. If anything fails, paste the failure as-is and stop.
-        6. Ask "@review please check SCOPE-<id> on scope/<id>".
+        6. Hand off to the reviewer role: "@reviewer please check SCOPE-<id>
+           on scope/<id>". Address the role, not the agent.
 
-      GATE 2. Never open a pull request until the approver writes
+      GATE 2. Never open a pull request until @{$creator} writes
       "approve PR SCOPE-<id>". Then open it from scope/<id> to main titled
       "SCOPE-<id>: <title>", with the scope file and Review's table in the
       body, post the link, and ask @scope to tell the client.
@@ -175,7 +171,7 @@ agents:
     addressing: owner-agents
     provider: "{review_provider}"
     location: "{location}"
-    directory: "{review_dir}"
+    directory: "{$agents_dir}/{team}-review"
     repo: "https://github.com/{repository}"
     auto_mode: true
     auto_approve: false
@@ -211,7 +207,7 @@ rooms:
     description: Where the client asks for work and gets plain-language status.
     bridge: "{bridge}"
     agents: ["{team}-scope"]
-    users: ["{$creator}"]
+    users: ["{$creator}", "{client}"]
     aliases:
       "{team}-scope": scope
     instructions: |
@@ -219,17 +215,11 @@ rooms:
       1. Always name the scope id.
       2. Keep it client-safe: no raw logs, no review findings, no internal
          debate. Those live in the studio room.
-      3. Only the agency's approver, in the studio room, can approve scopes or
-         pull requests. A client "approve" is noted and passed on, never acted on.
+      3. Only the agency's approver, @{$creator}, in the studio room, can
+         approve scopes or pull requests. A client "approve" is noted and passed on, never acted on.
       4. Any ask after a scope is approved gets an in-scope or out-of-scope
          answer with an hour estimate before anyone builds it.
       5. Reply in the thread of the request.
-    roles:
-      - name: client
-        exclusive: false
-        instructions: |
-          You ask for work in one message and answer Scope's questions. You
-          cannot approve scopes or pull requests.
     kickoff: |
       @{team}-scope this is the client room. Introduce yourself to the client
       in two lines: how to ask for work, and what happens next.
@@ -249,20 +239,26 @@ rooms:
       1. Always name the scope id. "The new feature" is not an id.
       2. Paste real command output, including failures. Never summarise a
          failing run into a sentence that sounds fine.
-      3. No code before "approve SCOPE-<id>" from the approver. No pull request
-         before "approve PR SCOPE-<id>" from the approver. Only the holder of
-         the exclusive approver role can approve.
+      3. No code before "approve SCOPE-<id>" from @{$creator}. No pull request
+         before "approve PR SCOPE-<id>" from @{$creator}. Nobody else can
+         approve, including agents and the client.
       4. One scope in build at a time.
       5. When something is rejected, say why in one line, so the next person
          who sees it does not start again from nothing.
       6. Reply in the thread of the request you are working on.
       7. Scope is the only agent that speaks in the client room.
+      8. Hand off work as: done, still open, next (the person or role).
     roles:
-      - name: approver
+      - name: builder
         exclusive: true
         instructions: |
-          You sign scopes and pull requests. Read the scope before "approve
-          SCOPE-<id>", and Review's table before "approve PR SCOPE-<id>".
+          You hold the pen. Only the builder pushes to scope/<id> branches and
+          opens pull requests, and only after the approver's sign-off.
+      - name: reviewer
+        exclusive: true
+        instructions: |
+          You are the second opinion. Check every acceptance criterion against
+          the diff and your own test run. Never edit the code you review.
     docs:
       - name: ROOM-RULES
         description: How ScopeRoom works, for people joining the studio.
@@ -271,7 +267,7 @@ rooms:
           ScopeRoom flow
           1. The client asks @scope for work in the client room.
           2. Scope posts SCOPE-<id> (ACs, out of scope, estimate) in both rooms.
-          3. The approver writes "approve SCOPE-<id>" here (or "reject SCOPE-<id>: reason").
+          3. The approver (@{$creator}) writes "approve SCOPE-<id>" here (or "reject SCOPE-<id>: reason").
           4. Build implements on branch scope/<id> and posts real test output here.
           5. Review checks every AC and lists anything outside the scope.
           6. The approver writes "approve PR SCOPE-<id>". Build opens the PR.
@@ -279,8 +275,9 @@ rooms:
           8. Anything asked after approval goes back to Scope: in or out of
              scope, priced, and logged in SCOPE-LEDGER.
     kickoff: |
-      @{team}-scope @{team}-build @{team}-review: this is the studio. Each of
-      you, in one line: what you will do here, and what you will not do.
+      @{team}-build take the builder role in this room. @{team}-review take
+      the reviewer role. @{team}-scope @{team}-build @{team}-review: each of
+      you, in one line, what you will do here and what you will not do.
 
 links:
   - from: "{team}-client"
